@@ -1,0 +1,14 @@
+;=================================== Asset ==================================
+include "Assets/Cash.bean"
+include "Assets/Investment.bean"
+; include "Assets/Others.bean"
+; include "Assets/Emergency.bean"
+; include "Assets/Retirement.bean"
+; include "Assets/HealthCare.bean"
+
+include "Income.bean"
+include "Expenses.bean"
+include "Liabilities.bean"
+; include "Equity.bean"
+
+

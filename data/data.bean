@@ -1,0 +1,3 @@
+include "commodity.bean"
+include "prices.bean"
+include "RealEstate/RealEstate.bean"
