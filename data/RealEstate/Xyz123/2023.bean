@@ -46,9 +46,4 @@
     ; The down payment money
     Assets:Investment:RealEstate:Escrow:Xyz123:TitleCompany -257,873.99 USD
 
-2023-12-01 * "Lender" "Monthly Payment for Mortgage"
-    Assets:Investment:RealEstate:OperatingAccounts:JointKeyBank:Xyz123 -8,388.03 USD
-    Liabilities:Non-current:Mortgage:Xyz123:Lender 956.19 USD
-    Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:Interest 6,247.05 USD
-    Assets:Investment:RealEstate:Escrow:Xyz123:Lender 1,184.79 USD
 

@@ -19,6 +19,5 @@
 2023-01-01 open Expenses:RealEstate:Xyz123:Miscellaneous:TitleAndSettlementCharges USD
 2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Legal:GovernmentRecording USD
 
-
-
-
+2023-01-01 open Expenses:RealEstate:Xyz123:SellingExpenses:Commission USD
+2023-01-01 open Expenses:RealEstate:Xyz123:SellingExpenses:ClosingCost USD
