@@ -1,0 +1,153 @@
+; This single file contains the beancount examples for real estate transactions discussed in: https://thebeanledger.com/posts/real-estate/
+
+option "title" "Example ledger for bookkeeping Real Estates"
+option "operating_currency" "USD"
+
+
+; Model the house in its own commodity
+2023-01-01 commodity XYZ123
+    address: "123 ABC Street, XYZ City, WA, 12345"
+
+; Assets accounts
+2023-01-01 open Assets:Investment:RealEstate:Properties:Xyz123 XYZ123
+2023-01-01 open Assets:Investment:RealEstate:Escrow:Xyz123:Lender USD
+2023-01-01 open Assets:Investment:RealEstate:Escrow:Xyz123:TitleCompany USD
+2023-01-01 open Assets:Investment:RealEstate:Escrow:Xyz123:Management USD
+2023-01-01 open Assets:Investment:RealEstate:OperatingAccounts:JointKeyBank:Xyz123 USD
+
+; Liabilities accounts
+2023-01-01 open Liabilities:Non-current:Mortgage:Xyz123:Lender USD
+
+; Income accounts
+2023-01-01 open Income:Investments:RealEstate:Xyz123:Rental USD
+2023-01-01 open Income:Investments:RealEstate:Xyz123:PnL
+
+
+; Expenses of Xyz123
+2023-01-01 open Expenses:RealEstate:Xyz123:Credits USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Advertising USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Travel USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Maintenance USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Commission USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Insurance:Progressive USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Legal USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:LocalManagementFee USD
+2023-01-01 open Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:ClosingFees USD
+2023-01-01 open Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:Apprasial USD
+2023-01-01 open Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:Interest USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Repairs USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Supplies USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:PropertyTax USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Utility USD
+2023-01-01 open Expenses:RealEstate:Xyz123:Miscellaneous:MobileSigningFee USD
+2023-01-01 open Expenses:RealEstate:Xyz123:Miscellaneous:Inspection USD
+2023-01-01 open Expenses:RealEstate:Xyz123:Miscellaneous:TitleAndSettlementCharges USD
+2023-01-01 open Expenses:RealEstate:Xyz123:OperatingExpenses:Legal:GovernmentRecording USD
+
+2023-01-01 open Expenses:RealEstate:Xyz123:SellingExpenses:Commission USD
+2023-01-01 open Expenses:RealEstate:Xyz123:SellingExpenses:ClosingCost USD
+
+
+
+;======================== Earnest Money ==============================
+2023-10-12 * "Title Company" "Earnest money to escrow"
+    Assets:Investment:RealEstate:OperatingAccounts:JointKeyBank:Xyz123            -20,000 USD
+    Assets:Investment:RealEstate:Escrow:Xyz123:TitleCompany                        20,000 USD
+
+;======================== Down payment ==============================
+2023-11-13 * "Title Company" "Down payment to escrow"
+    Assets:Investment:RealEstate:OperatingAccounts:JointKeyBank:Xyz123        -257,873.99 USD
+    Assets:Investment:RealEstate:Escrow:Xyz123:TitleCompany                    257,873.99 USD
+
+;======================== Settlement ===============================
+2023-11-14 * "Lender" "Initlizing House"
+    ; Add one property with the cost of 1.4 M US dollars
+    Assets:Investment:RealEstate:Properties:Xyz123                                      1 XYZ123 {1,400,000.00 USD}
+    ; Pay the property tax
+    Expenses:RealEstate:Xyz123:OperatingExpenses:PropertyTax                       600.69 USD
+    ; This house uses a propane tank. We need pay for that.
+    Expenses:RealEstate:Xyz123:OperatingExpenses:Utility                           398.03 USD
+    Expenses:RealEstate:Xyz123:OperatingExpenses:Utility                            10.15 USD
+    ; Closing fees collected by the lender
+    Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:ClosingFees           23599.95 USD
+    ; Usually we will inspect the house before finalize the transaction
+    Expenses:RealEstate:Xyz123:Miscellaneous:Inspection                            165.00 USD
+    ; Expenses from the lender
+    Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:Apprasial             1,175.00 USD
+    Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:ClosingFees             116.00 USD
+    Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:ClosingFees               9.90 USD
+    Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:ClosingFees              70.00 USD
+    ; Prepaid interest
+    Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:Interest              3,491.46 USD
+    ; Deposit some money into the escrow account
+    Assets:Investment:RealEstate:Escrow:Xyz123:Lender                              166.50 USD
+    Assets:Investment:RealEstate:Escrow:Xyz123:Lender                             4517.16 USD
+    ; Miscellaneous expenses
+    Expenses:RealEstate:Xyz123:Miscellaneous:TitleAndSettlementCharges               9.38 USD
+    Expenses:RealEstate:Xyz123:Miscellaneous:TitleAndSettlementCharges            1758.40 USD
+    Expenses:RealEstate:Xyz123:Miscellaneous:TitleAndSettlementCharges            1396.87 USD
+    Expenses:RealEstate:Xyz123:Miscellaneous:MobileSigningFee                         150 USD
+    Expenses:RealEstate:Xyz123:OperatingExpenses:Legal:GovernmentRecording         437.00 USD
+    ; Insurance
+    Expenses:RealEstate:Xyz123:OperatingExpenses:Insurance:Progressive             666.00 USD
+    ; Deduct the earnest money
+    Assets:Investment:RealEstate:Escrow:Xyz123:TitleCompany                       -20,000 USD
+    ; The borrowed money
+    Liabilities:Non-current:Mortgage:Xyz123:Lender                          -1,110,586.00 USD
+    ; Credits provided by the seller
+    Expenses:RealEstate:Xyz123:Credits                                         -50,000.00 USD
+    Assets:Investment:RealEstate:Escrow:Xyz123:Lender                             -277.50 USD
+    ; The down payment money
+    Assets:Investment:RealEstate:Escrow:Xyz123:TitleCompany                   -257,873.99 USD
+
+;================= Tracking Mortgage Payments ======================
+2024-01-01 * "Lender" "Monthly Payment for Mortgage"
+    Assets:Investment:RealEstate:OperatingAccounts:JointKeyBank:Xyz123          -8,388.03 USD
+    Liabilities:Non-current:Mortgage:Xyz123:Lender                                 956.19 USD
+    Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:Interest              6,247.05 USD
+    Assets:Investment:RealEstate:Escrow:Xyz123:Lender                            1,184.79 USD
+
+2024-02-01 * "Lender" "Monthly Payment for Mortgage"
+    Assets:Investment:RealEstate:OperatingAccounts:JointKeyBank:Xyz123          -8,388.03 USD
+    Liabilities:Non-current:Mortgage:Xyz123:Lender                                 961.57 USD
+    Expenses:RealEstate:Xyz123:DebtService:Lender:Mortgage:Interest              6,241.67 USD
+    Assets:Investment:RealEstate:Escrow:Xyz123:Lender                            1,184.79 USD
+
+;================= Property Appreciation (Pricing) ======================
+2025-04-01 price XYZ123                                                         1,466,500 USD
+2025-06-01 price XYZ123                                                         1,476,500 USD
+2025-07-01 price XYZ123                                                         1,486,500 USD
+
+;=================== Renting ====================
+2024-02-01 * "Management" "Rent Feb 2024"
+    Income:Investments:RealEstate:Xyz123:Rental                                -10,000.00 USD
+    Assets:Investment:RealEstate:Escrow:Xyz123:Management                       10,000.00 USD
+
+2024-02-01 * "Management Fee Feb 2024"
+    Assets:Investment:RealEstate:Escrow:Xyz123:Management                        -1000.00 USD
+    Expenses:RealEstate:Xyz123:OperatingExpenses:LocalManagementFee               1000.00 USD
+
+2024-02-21 * "Xyz123: Owner Distribution Feb 2024"
+    Assets:Investment:RealEstate:Escrow:Xyz123:Management                       -9,000.00 USD
+    Assets:Investment:RealEstate:OperatingAccounts:JointKeyBank:Xyz123           9,000.00 USD
+
+
+;=================== Property Tax & Insurance ====================
+2024-04-05 * "" "Tax Disbursement"
+    Expenses:RealEstate:Xyz123:OperatingExpenses:PropertyTax                     4,404.27 USD
+    Assets:Investment:RealEstate:Escrow:Xyz123:Lender                           -4,404.27 USD
+
+2024-10-21 * "Progressive" "Property Insurance"
+    Expenses:RealEstate:Xyz123:OperatingExpenses:Insurance:Progressive             776.00 USD
+    Assets:Investment:RealEstate:Escrow:Xyz123:Lender                             -776.00 USD
+
+;=================== Sell the Property ====================
+2025-05-01 * "Sell Xyz123"
+    Assets:Investment:RealEstate:Properties:Xyz123                                     -1 XYZ123 {} @ 1,600,000.00 USD
+    Liabilities:Non-current:Mortgage:Xyz123:Lender                           1,094,012.23 USD
+    Expenses:RealEstate:Xyz123:SellingExpenses:Commission                          75,000 USD
+    Expenses:RealEstate:Xyz123:SellingExpenses:ClosingCost                         10,000 USD
+    Assets:Investment:RealEstate:OperatingAccounts:JointKeyBank:Xyz123         420,987.77 USD
+    Income:Investments:RealEstate:Xyz123:PnL
+
+
