@@ -1,5 +1,6 @@
-This project contains Beancount bookkeeping examples discuss in the blog: [thebeanledger.com](thebeanledger.com)
+This project contains Beancount bookkeeping examples discussed in the blog: [thebeanledger.com](thebeanledger.com).
 Each file in the `single_examples` directory is a self-contained Beancount ledger.
+
 You can simply run
 
 ```bash
