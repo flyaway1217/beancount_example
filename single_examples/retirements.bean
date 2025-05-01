@@ -116,12 +116,12 @@ option "operating_currency" "USD"
     Expenses:Finance:FinancialFees
 
 
-; Further optimization: how to automatically make these transfers instead of manually.
-2024-12-31 * "Unused 401K quota"
-    Assets:Retirement:401K:ElectiveDeferral:Quota                  -21566.80 ED401K
-    Expenses:Taxes:Retirement:401K:ElectiveDeferralUnused           21566.80 ED401K
-    Assets:Retirement:401K:Quota                                   -67100.20 TOTAL401K
-    Expenses:Taxes:Retirement:401K:TotalUnused                      67100.20 TOTAL401K
-
+; Note about the date here, we want to ensure the inserted pad transactions is in 2024 while the balance is in 2025
+; More about pad: https://beancount.github.io/docs/beancount_language_syntax.html?utm_source=chatgpt.com#pad
+2024-12-31 pad  Assets:Retirement:401K:ElectiveDeferral:Quota Expenses:Taxes:Retirement:401K:ElectiveDeferralUnused
 2025-01-01 balance Assets:Retirement:401K:ElectiveDeferral:Quota           0 ED401K
+
+2024-12-31 pad  Assets:Retirement:401K:Quota Expenses:Taxes:Retirement:401K:TotalUnused
 2025-01-01 balance Assets:Retirement:401K:Quota                            0 TOTAL401K
+
+
