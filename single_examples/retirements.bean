@@ -1,0 +1,127 @@
+; This single file contains the beancount examples for bookkeeping Retirement Accounts in USA, as discussed in: https://thebeanledger.com/posts/retirement/
+; This file focus on 401(k) accounts but the same method can be easily exteneded to IRA or other retirement accounts.
+
+option "title" "Example ledger for Retirement Accounts in USA"
+option "operating_currency" "USD"
+
+; Define commodities
+2024-01-01 commodity USD             ; Operating currency
+2024-01-01 commodity ED401K          ; Elective deferral quota
+2024-01-01 commodity TOTAL401K       ; Total 401K limit
+2024-01-01 commodity VINIX           ; Example investment instrument
+
+; Define quota-tracking accounts
+2024-01-01 open Assets:Retirement:401K:ElectiveDeferral:Quota ED401K
+2024-01-01 open Assets:Retirement:401K:Quota TOTAL401K
+
+; Define contribution cash accounts
+2024-01-01 open Assets:Retirement:401K:Cash:PreTax:Vanguard USD
+2024-01-01 open Assets:Retirement:401K:Cash:Roth:Vanguard USD
+
+; Define investment holdings
+2024-01-01 open Assets:Retirement:401K:ElectiveDeferral:PreTax:Vanguard:VINIX VINIX
+2024-01-01 open Assets:Retirement:401K:ElectiveDeferral:Roth:Vanguard:VINIX VINIX
+2024-01-01 open Assets:Cash:Checking:Chase USD
+
+; Define expenses accounts
+2024-01-01 open Expenses:Taxes:Retirement:401K:ElectiveDeferral ED401K
+2024-01-01 open Expenses:Taxes:Retirement:401K:Total TOTAL401K
+2024-01-01 open Expenses:Taxes:Retirement:401K:ElectiveDeferralUnused ED401K
+2024-01-01 open Expenses:Taxes:Retirement:401K:TotalUnused TOTAL401K
+2024-01-01 open Expenses:Finance:FinancialFees USD
+
+; Define income accounts
+2024-01-01 open Income:Work:Employer:Earnings:Regular USD
+2024-01-01 open Income:Work:Employer:Benefits:401KMatch USD
+2024-01-01 open Income:Benefits:Federal:401K
+
+
+; At the beginning of each year, we initialize the limits
+2024-01-01 * "Initialize 401K Quota for 2024"
+    Assets:Retirement:401K:ElectiveDeferral:Quota                     23,500 ED401K
+    Assets:Retirement:401K:Quota                                      70,000 TOTAL401K
+    Income:Benefits:Federal:401K
+
+2024-01-30 * "Employer" "Salary"
+    ; Gross income
+    Income:Work:Employer:Earnings:Regular                          -8,787.19 USD
+    ; Tax
+    ; ...
+    ; Pre Tax Deductions
+    Assets:Retirement:401K:Cash:PreTax:Vanguard                       483.30 USD
+    ; ...
+    ; Post Tax Deductions
+    Assets:Retirement:401K:Cash:Roth:Vanguard                         483.30 USD
+    ; ...
+    ; Direct deposit
+    Assets:Cash:Checking:Chase                                      7,820.59 USD
+    ; Track ElectiveDeferral401K
+    Assets:Retirement:401K:ElectiveDeferral:Quota                    -966.60 ED401K
+    Expenses:Taxes:Retirement:401K:ElectiveDeferral                   966.60 ED401K
+    ; Track Total401K
+    Assets:Retirement:401K:Quota                                     -966.60 TOTAL401K
+    Expenses:Taxes:Retirement:401K:Total                              966.60 TOTAL401K
+
+2024-01-30 * "Employer" "401K Match"
+    Income:Work:Employer:Benefits:401KMatch                          -483.30 USD
+    Assets:Retirement:401K:Cash:PreTax:Vanguard                       483.30 USD
+    Assets:Retirement:401K:Quota                                     -483.30 TOTAL401K
+    Expenses:Taxes:Retirement:401K:Total                              483.30 TOTAL401K
+
+
+2024-01-30 * "Vanguard" "Investing Pre-Tax 401K"
+    Assets:Retirement:401K:Cash:PreTax:Vanguard                      -966.60 USD
+    Assets:Retirement:401K:ElectiveDeferral:PreTax:Vanguard:VINIX      2.203 VINIX {438.78 USD}
+    Expenses:Finance:FinancialFees
+
+2024-01-30 * "Vanguard" "Investing Roth 401K"
+    Assets:Retirement:401K:Cash:Roth:Vanguard                        -483.30 USD
+    Assets:Retirement:401K:ElectiveDeferral:Roth:Vanguard:VINIX        1.101 VINIX {438.78 USD}
+    Expenses:Finance:FinancialFees
+
+2024-02-28 * "Employer" "Salary"
+    ; Gross income
+    Income:Work:Employer:Earnings:Regular                          -8,787.19 USD
+    ; Tax
+    ; ...
+    ; Pre Tax Deductions
+    Assets:Retirement:401K:Cash:PreTax:Vanguard                       483.30 USD
+    ; ...
+    ; Post Tax Deductions
+    Assets:Retirement:401K:Cash:Roth:Vanguard                         483.30 USD
+    ; ...
+    ; Direct deposit
+    Assets:Cash:Checking:Chase                                      7,820.59 USD
+    ; Track ElectiveDeferral401K
+    Assets:Retirement:401K:ElectiveDeferral:Quota                    -966.60 ED401K
+    Expenses:Taxes:Retirement:401K:ElectiveDeferral                   966.60 ED401K
+    ; Track Total401K
+    Assets:Retirement:401K:Quota                                     -966.60 TOTAL401K
+    Expenses:Taxes:Retirement:401K:Total                              966.60 TOTAL401K
+
+2024-02-28 * "Employer" "401K Match"
+    Income:Work:Employer:Benefits:401KMatch                          -483.30 USD
+    Assets:Retirement:401K:Cash:PreTax:Vanguard                       483.30 USD
+    Assets:Retirement:401K:Quota                                     -483.30 TOTAL401K
+    Expenses:Taxes:Retirement:401K:Total                              483.30 TOTAL401K
+
+2024-02-28 * "Vanguard" "Investing Pre-Tax 401K"
+    Assets:Retirement:401K:Cash:PreTax:Vanguard                      -966.60 USD
+    Assets:Retirement:401K:ElectiveDeferral:PreTax:Vanguard:VINIX      2.203 VINIX {438.78 USD}
+    Expenses:Finance:FinancialFees
+
+2024-02-28 * "Vanguard" "Investing Roth 401K"
+    Assets:Retirement:401K:Cash:Roth:Vanguard                        -483.30 USD
+    Assets:Retirement:401K:ElectiveDeferral:Roth:Vanguard:VINIX        1.101 VINIX {438.78 USD}
+    Expenses:Finance:FinancialFees
+
+
+; Further optimization: how to automatically make these transfers instead of manually.
+2024-12-31 * "Unused 401K quota"
+    Assets:Retirement:401K:ElectiveDeferral:Quota                  -21566.80 ED401K
+    Expenses:Taxes:Retirement:401K:ElectiveDeferralUnused           21566.80 ED401K
+    Assets:Retirement:401K:Quota                                   -67100.20 TOTAL401K
+    Expenses:Taxes:Retirement:401K:TotalUnused                      67100.20 TOTAL401K
+
+2025-01-01 balance Assets:Retirement:401K:ElectiveDeferral:Quota           0 ED401K
+2025-01-01 balance Assets:Retirement:401K:Quota                            0 TOTAL401K
