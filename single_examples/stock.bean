@@ -1,0 +1,59 @@
+; This single file contains the beancount examples for stock transactions discussed in: https://thebeanledger.com/posts/stock/
+
+option "title" "Example ledger for bookkeeping Stock Trading"
+option "operating_currency" "USD"
+
+; Define the commodity for AMAZN
+2025-01-01 commodity AMZN
+; Cash account
+2005-01-01 open Assets:Fidelity:Cash  USD
+; The account to hold the Amazon stocks
+2025-01-01 open Assets:Fidelity:Playground:AMZN  AMZN
+; The account used to track the profit and loss of the investment on Amazon stock
+2025-01-01 open Income:Fidelity:AMZN:PnL
+; The account used to track the dividends of Amazon stock (Amazon does not distribute dividends in reality, here, we only use it for demostration)
+2025-01-01 open Income:Fidelity:AMZN:Dividends
+; The expenes account to track the commissions
+2025-01-01 open Expenses:Financial:Commissions
+
+
+2025-05-01 * "Buy 10 AMZN at price of 200 USD"
+    Assets:Fidelity:Cash             -2010.00 USD
+    Assets:Fidelity:Playground:AMZN        10 AMZN {200.00 USD}
+    ; I assume a fixed rate (10 dollars) for each transaction
+    Expenses:Financial:Commissions         10 USD
+
+2025-05-02 * "Buy 20 AMZN at price of 180 USD"
+    Assets:Fidelity:Cash             -3610.00 USD
+    Assets:Fidelity:Playground:AMZN        20 AMZN {180.00 USD}
+    ; I assume a fixed rate (10 dollars) for each transaction
+    Expenses:Financial:Commissions         10 USD
+
+
+2025-05-03 * "sell 5 shares from the first lot"
+    Assets:Fidelity:Playground:AMZN        -5 AMZN {200.00 USD} @ 190 USD
+    Assets:Fidelity:Cash                  950 USD
+    Expenses:Financial:Commissions         10 USD
+    Income:Fidelity:AMZN:PnL
+
+2025-05-03 * "sell 5 shares from the second lot"
+    Assets:Fidelity:Playground:AMZN        -5 AMZN {180.00 USD, 2025-05-02} @ 190 USD
+    Assets:Fidelity:Cash                  950 USD
+    Expenses:Financial:Commissions         10 USD
+    Income:Fidelity:AMZN:PnL
+
+2025-06-01 * "Amazon Dividends"
+    Assets:Fidelity:Cash                   10 USD
+    Income:Fidelity:AMZN:Dividends        -10 USD
+
+2025-05-03 * "sell 2 shares from the first lot and shares from the second lot"
+    Assets:Fidelity:Playground:AMZN        -2 AMZN {200.00 USD} @ 190 USD
+    Assets:Fidelity:Playground:AMZN        -3 AMZN {180.00 USD} @ 190 USD
+    Assets:Fidelity:Cash                  950 USD
+    Expenses:Financial:Commissions         10 USD
+    Income:Fidelity:AMZN:PnL
+
+
+
+
+
