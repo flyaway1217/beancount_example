@@ -1,0 +1,18 @@
+; This single file contains the beancount examples for real estate transactions discussed in: https://thebeanledger.com/posts/health-expenses/
+
+option "title" "Example ledger for bookkeeping Healthcare Expenses"
+option "operating_currency" "USD"
+
+2023-01-01 open Expenses:NonTaxes:Health:Medical:Claims
+2023-01-01 open Expenses:NonTaxes:Health:Medical:BlueShield:PPO:PlanDiscount
+2023-01-01 open Expenses:NonTaxes:Health:Medical:BlueShield:PPO:ClaimsPayment
+
+2023-01-01 open Liabilities:Current:Payable
+
+2023-04-17 * "Dr X" "urgent care"
+    Expenses:NonTaxes:Health:Medical:Claims                         307.00 USD
+    Expenses:NonTaxes:Health:Medical:BlueShield:PPO:PlanDiscount    -51.39 USD
+    Expenses:NonTaxes:Health:Medical:BlueShield:PPO:ClaimsPayment  -205.61 USD
+    Liabilities:Current:Payable                                     -50.00 USD
+
+

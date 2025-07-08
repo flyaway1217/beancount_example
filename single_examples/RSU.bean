@@ -1,0 +1,55 @@
+; This single file contains the beancount examples for real estate transactions discussed in: https://thebeanledger.com/posts/rsu/
+
+option "title" "Example ledger for bookkeeping Restricted Stock Units"
+option "operating_currency" "USD"
+
+2023-01-01 commodity USD
+2023-01-01 commodity AMZN
+2023-01-01 commodity AMZN.UNVEST
+
+2023-01-02 open Assets:Investment:Stock:MorganStanley:AMZN AMZN
+2023-01-02 open Assets:Others:UnvestedStock:MorganStanley:AMZN AMZN.UNVEST
+2023-01-02 open Assets:Others:RSURefund:Amazon USD
+2023-01-02 open Assets:Saving:Chase
+
+2023-01-02 open Income:Work:Amazon:Awards AMZN.UNVEST
+2023-01-02 open Income:Work:Amazon:Earnings:RSU USD
+
+; Keep tracking the number of units that have been vested
+2023-01-02 open Expenses:NonTaxes:Passive:Vested:Amazon AMZN.UNVEST
+; Taxes related accounts
+2023-01-02 open Expenses:Taxes:FederalIncomeTax:Withhold USD
+2023-01-02 open Expenses:NonTaxes:Active:Finance:Commission USD
+2023-01-02 open Expenses:NonTaxes:Active:Finance:FinancialFees  USD
+2023-01-02 open Expenses:Taxes:FederalMedicareTax USD
+2023-01-02 open Expenses:Taxes:FederalSocialSecurityTax USD
+
+; Receive awards from Amazon
+2023-04-01 * "Amazon" "RSU award"
+    Income:Work:Amazon:Awards                             -474 AMZN.UNVEST
+    Assets:Others:UnvestedStock:MorganStanley:AMZN         474 AMZN.UNVEST
+
+
+; Vesting step 1: receive the compensation in the form of cash
+2024-05-21 * "Vesting Event"
+    Income:Work:Amazon:Earnings:RSU                 -39,934.22 USD
+    Expenses:Taxes:FederalIncomeTax:Withhold          8,785.53 USD
+    Expenses:Taxes:FederalSocialSecurityTax           2,475.92 USD
+    Expenses:Taxes:FederalMedicareTax                   579.05 USD
+    Assets:Saving:Chase                                 316.00 USD
+    Assets:Others:RSURefund:Amazon
+
+; Vesting step 2: converting the cash into stock units, logging the cost basis
+2024-05-21 * "Conversion into shares"
+    Assets:Investment:Stock:MorganStanley:AMZN             153 AMZN {181.5192 USD}
+    Assets:Others:RSURefund:Amazon                  -27,777.72 USD
+    Expenses:NonTaxes:Active:Finance:Commission           4.95 USD
+    Expenses:NonTaxes:Active:Finance:FinancialFees       
+    Assets:Others:UnvestedStock:MorganStanley:AMZN        -220 AMZN.UNVEST
+    Expenses:NonTaxes:Passive:Vested:Amazon                220 AMZN.UNVEST
+
+2024-05-22 balance Assets:Others:RSURefund:Amazon            0 USD
+
+
+
+
