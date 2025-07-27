@@ -1,0 +1,77 @@
+; This single file contains the beancount examples for taxes transactions discussed in: https://thebeanledger.com/posts/recording-taxes/
+
+option "title" "Example ledger for bookkeeping Taxes"
+option "operating_currency" "USD"
+
+
+; ==================== Taxes Related Accounts ================
+2024-01-01 open Expenses:Taxes:Federal:IncomeTax:Withhold
+2024-01-01 open Expenses:Taxes:Federal:IncomeTax:Payments
+2024-01-01 open Expenses:Taxes:Federal:IncomeTax:Refund
+; Social Security
+2024-01-01 open Expenses:Taxes:Federal:SocialSecurityTax
+; Medical Care
+2024-01-01 open Expenses:Taxes:Federal:MedicareTax
+; Sale Tax
+2024-01-01 open Expenses:Taxes:SaleTax
+
+; Dedicated Subaccounts for each Year
+2024-01-01 open Expenses:Taxes:Federal:IncomeTax:2024:Withhold
+2024-01-01 open Expenses:Taxes:Federal:IncomeTax:2024:Payments
+2024-01-01 open Expenses:Taxes:Federal:IncomeTax:2024:Refund
+
+; Other required accounts
+2024-01-01 open Assets:Cash:Checking:Chase
+2024-01-01 open Income:Work:Salary
+2024-01-01 open Liabilities:Hold:Expenses:Taxes:Federal:IncomeTax:Payments
+2024-01-01 open Expenses:Daily:Grocery
+
+;=================== Simple Salary Examples ================
+2025-07-15 * "Employer" "Salary"
+    ; Gross income
+    Income:Work:Salary                                               -6,000 USD
+    ; Tax
+    Expenses:Taxes:Federal:IncomeTax:Withhold                      1,200.00 USD
+    Expenses:Taxes:Federal:SocialSecurityTax                         372.00 USD
+    Expenses:Taxes:Federal:MedicareTax                                87.00 USD
+    ; Direct deposit
+    Assets:Cash:Checking:Chase                                     4,341.00 USD
+
+
+;===================  Consolidated Salary in 2024 ================
+2024-12-01 * "Employer" "Salary"
+    ; Gross income
+    Income:Work:Salary                                          -100,000.00 USD
+    ; Tax
+    Expenses:Taxes:Federal:IncomeTax:Withhold                     10,000.00 USD
+    ; Direct deposit
+    Assets:Cash:Checking:Chase                                    90,000.00 USD
+
+;===================  Naive Tax Recording =================
+2025-04-15 * "IRS" "Tax payments for 2024"
+    Expenses:Taxes:Federal:IncomeTax:Payments                      3,000.00 USD
+    Assets:Cash:Checking:Chase                                    -3,000.00 USD
+
+
+;=============== Option 1: Dedicated Subaccounts for each Year =============
+2025-04-15 * "IRS" "Tax payments for 2024"
+    Expenses:Taxes:Federal:IncomeTax:2024:Payments                 3,000.00 USD
+    Assets:Cash:Checking:Chase                                    -3,000.00 USD
+
+
+;=================== Option 2: Use Two Separate Transactions ================
+2024-12-31 * "IRS" "Tax payments for 2024"
+    Expenses:Taxes:Federal:IncomeTax:2024:Payments                 3,000.00 USD
+    Liabilities:Hold:Expenses:Taxes:Federal:IncomeTax:Payments    -3,000.00 USD
+
+
+2025-04-15 * "IRS" "Tax payments for 2024"
+    Liabilities:Hold:Expenses:Taxes:Federal:IncomeTax:Payments     3,000.00 USD
+    Assets:Cash:Checking:Chase                                    -3,000.00 USD
+
+
+;================================== Sale Taxes =============================
+2025-07-19 * "AMAZON" "buy grocery"
+    Expenses:Daily:Grocery                                            12.32 USD
+    Expenses:Taxes:SaleTax                                             1.28 USD
+    Assets:Cash:Checking:Chase                                       -13.60 USD
